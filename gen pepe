@@ -1,0 +1,91 @@
+from turtle import *
+import random
+
+def draw_square(x, y, width, height, color):
+    penup()
+    goto(x - width / 2, y - height / 2)
+    pendown()
+    fillcolor(color)
+    begin_fill()
+    for _ in range(2):
+        forward(width)
+        left(90)
+        forward(height)
+        left(90)
+    end_fill()
+
+def draw_pattern():
+    noise = 18
+    size = 88
+    shrink = 14
+
+    for x in range(-500 + size // 2, 500, size):
+        for y in range(-500 + size // 2, 500, size):
+            # draw outer square with a light color
+            draw_square(x, y, size, size, "lightgray")
+            # determine the offsets
+            x_off = random.uniform(-noise, noise)
+            y_off = random.uniform(-noise, noise)
+            # draw inner square with a lighter color
+            for i in range(9):
+                draw_square(x + i * x_off, y + i * y_off, size - i * shrink, size - i * shrink, "lightgray")
+
+def draw_pepe_face():
+    eye_width = 90
+    eye_height = 40
+    mouth_width = 270
+    mouth_height = 50
+
+    # rectangle around the eyes
+    draw_square(-60, 120, eye_width + 40, eye_height + 40, "white")
+    draw_square(60, 120, eye_width + 40, eye_height + 40, "white")
+
+    # eyes
+    draw_square(-60, 100, eye_width, eye_height, "black")
+    draw_square(60, 100, eye_width, eye_height, "black")
+
+
+
+    # mouth 
+    penup()
+    goto(-125, -80)
+    pendown()
+    fillcolor("red")
+    begin_fill()
+    for _ in range(2):
+        forward(mouth_width)
+        left(90)
+        forward(mouth_height)
+        left(90)
+    end_fill()
+
+def save_canvas(event):
+    # Save the turtle canvas as a PNG image on right-click
+    filename = "turtle_pattern.png"
+    getscreen().getcanvas().postscript(file=filename)
+    img = Image.open(filename)
+    img.save(filename)
+    print(f"Pattern saved as {filename}")
+
+def main():
+    setup(600, 600)
+    width(1)
+    hideturtle()
+    tracer(False)
+
+    # Draw a light-colored background
+    draw_square(0, 0, 800, 800, "lightyellow")
+
+    draw_pattern()
+
+    # Draw the Pepe the Frog face on top of the pattern
+    draw_pepe_face()
+
+    # Bind the save_canvas function to right-click
+    getscreen().getcanvas().bind("<Button-3>", save_canvas)
+
+    tracer(True)
+    exitonclick()
+
+if __name__ == "__main__":
+    main()
